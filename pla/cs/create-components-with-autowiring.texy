@@ -159,6 +159,16 @@ class RegistrationControlFactory
 \--
 
 V configu nemusíme upravovat vůbec nic, vše poběží stejně dobře, jako do teď. V případě editačního formuláře jen v továrničce v presenteru předáme metodě create požadovaného uživatele.
+Pokud používáte Nette 2.2 a nižší, v configu je potřeba říci přesně, které parametry používám. V tomto případě.
+
+/--php
+registrationControlFactory:
+		class: RegistrationControlFactory(%user%, ...)
+		implement: IRegistrationControlFactory
+		parameters: [user]
+\--
+
+Všimněte si znaku ..., tři tečky tam opravdu patří, framework za vás sám doplní ostatní závislosti.
 
 
 {{author: Vojtěch Dobeš|3328}}
