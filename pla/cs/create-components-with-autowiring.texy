@@ -127,4 +127,38 @@ Dokonce není potřeba uvádět FQN((Fully qualified name)), Nette v souboru s t
 
 V presenteru pak pouze upravíme typehint v `injectRegistrationControlFactory` metodě z `RegistrationControlFactory` na `IRegistrationControlFactory`, a je to. Kódu, kde se jen předávají závislosti, jsme se úspěšně zbavili - o to se postará autowiring. A zároveň můžeme vytvářet nové instance tam, kde jsou potřeba.
 
+Někdy také může být potřeba předávat komponentě naše vlastní instance tříd (v tomto případě např. již vytvořeného uživatele pro jeho editaci). Stačí jen upravit interface:
+
+/--php
+interface IRegistrationControlFactory
+{
+	/** 
+	 * @param User|null $user
+	 * @return RegistrationControl 
+	 */
+	function create(User $user = NULL);
+}
+\--
+
+a samozřejmě také upravit komponentu:
+
+/--php
+class RegistrationControlFactory
+{
+	private $user, $emailValidator, $registrator, $mailer, $facebook;
+
+	public function __construct(User $user = NULL, EmailValidator $emailValidator, Registrator $registrator, Nette\Mail\IMailer $mailer, Facebook $facebook)
+	{
+		$this->user = $user;
+		$this->emailValidator = $emailValidator;
+		$this->registrator = $registrator;
+		$this->mailer = $mailer;
+		$this->facebook = $facebook;
+	}
+}
+\--
+
+V configu nemusíme upravovat vůbec nic, vše poběží stejně dobře, jako do teď. V případě editačního formuláře jen v továrničce v presenteru předáme metodě create požadovaného uživatele.
+
+
 {{author: Vojtěch Dobeš|3328}}
